@@ -6,10 +6,10 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+    USERS_TABLE: ${self:custom.usersTableName}
 
 custom:
-  tableName: users-table-${self:provider.stage}
+  usersTableName: users-table-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -23,7 +23,7 @@ functions:
     timeout: 20
     events:
       - http:
-          path: users
+          path: users/{userId}
           method: GET
     iamRoleStatements:
       - Effect: 'Allow'
@@ -49,7 +49,7 @@ resources:
     UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.usersTableName}
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S

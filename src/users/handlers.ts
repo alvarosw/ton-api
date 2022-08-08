@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { response } from '../utils';
 import db from '../db';
 
-const DB_PARAMS = { TableName: process.env.DYNAMODB_TABLE_NAME };
+const DB_PARAMS = { TableName: process.env.USERS_TABLE };
 
 export async function getUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
