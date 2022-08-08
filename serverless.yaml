@@ -17,7 +17,7 @@ plugins:
 
 functions:
   getUser:
-    handler: handlers.getUser
+    handler: src/users/handlers.getUser
     name: getUser
     memorySize: 1024
     timeout: 20
@@ -31,7 +31,7 @@ functions:
           - 'dynamodb:GetItem'
         Resource: !GetAtt UsersTable.Arn
   createUser:
-    handler: handlers.createUser
+    handler: src/users/handlers.createUser
     name: createUser
     memorySize: 128
     timeout: 5
