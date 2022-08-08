@@ -1,0 +1,61 @@
+service: ton-api
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+
+custom:
+  tableName: users-table-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-plugin-typescript
+
+functions:
+  getUser:
+    handler: handlers.getUser
+    name: getUser
+    memorySize: 1024
+    timeout: 20
+    events:
+      - http:
+          path: users
+          method: GET
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action:
+          - 'dynamodb:GetItem'
+        Resource: !GetAtt UsersTable.Arn
+  createUser:
+    handler: handlers.createUser
+    name: createUser
+    memorySize: 128
+    timeout: 5
+    events:
+      - http:
+          path: users
+          method: POST
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action:
+          - 'dynamodb:PutItem'
+        Resource: !GetAtt UsersTable. Arn
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

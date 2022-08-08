@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-      "target": "es2020",
-      "strict": true,
-      "preserveConstEnums": true,
-      "noEmit": true,
-      "sourceMap": false,
-      "module":"es2015",
-      "moduleResolution":"node",
-      "esModuleInterop": true, 
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,  
-    },
-    "exclude": ["node_modules", "**/*.test.ts"]
-  }
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "target": "esnext"
+  },
+  "exclude": ["node_modules"]
+}
