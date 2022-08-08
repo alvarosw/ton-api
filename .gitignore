@@ -205,4 +205,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Build folders
+/build
+/.build
+/dist
+/.dist
+
 # End of https://www.toptal.com/developers/gitignore/api/osx,node,linux,windows,sam
