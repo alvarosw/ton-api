@@ -1,4 +1,4 @@
-import { badResponse, response } from '../utils';
+import { badResponse, response } from '../../helpers';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import axios from 'axios';
 
