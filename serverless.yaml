@@ -1,5 +1,7 @@
 service: ton-api
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs16.x
@@ -7,6 +9,9 @@ provider:
   region: us-east-1
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
+    COUNTER_API_URL: ${env:COUNTER_API_URL}
+    COUNTER_NAMESPACE: ${env:COUNTER_NAMESPACE}
+    COUNTER_KEY: ${env:COUNTER_KEY}
 
 custom:
   usersTableName: users-table-${self:provider.stage}
@@ -14,6 +19,7 @@ custom:
 plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-typescript
+  - serverless-dotenv-plugin
 
 functions:
   getUser:
@@ -43,7 +49,25 @@ functions:
       - Effect: 'Allow'
         Action:
           - 'dynamodb:PutItem'
-        Resource: !GetAtt UsersTable. Arn
+        Resource: !GetAtt UsersTable.Arn
+  getCount:
+    handler: src/visits/handlers.getCount
+    name: getCount
+    memorySize: 128
+    timeout: 10
+    events:
+      - http:
+          path: visits
+          method: GET
+  hitCount:
+    handler: src/visits/handlers.hitCount
+    name: hitCount
+    memorySize: 128
+    timeout: 10
+    events:
+      - http:
+          path: visits
+          method: POST
 resources:
   Resources:
     UsersTable:
