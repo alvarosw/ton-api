@@ -1,10 +1,11 @@
-import User from '../users/User';
 import bcrypt from 'bcrypt';
-import { badResponse, response } from '../../utils';
+import jwt from 'jsonwebtoken';
+import User from '../users/User';
 import { APIGatewayEvent } from 'aws-lambda';
+import { badResponse, response } from '../../utils';
 
 type UserInterface = {
-  userid: string;
+  userId: string;
   name: string;
   email: string;
   password: string;
@@ -26,10 +27,15 @@ export async function register(event: APIGatewayEvent) {
 /**
  * Helpers
  */
-async function validateRegister(eventBody: Omit<UserInterface, 'userId'>) {
-  const [existingUserScan] = await User.scan().where('email').equals(eventBody.email).exec().promise();
+async function getUserByEmail(email: string) {
+  const [scan] = await User.scan().where('email').equals(email).exec().promise();
 
-  if (existingUserScan?.Items?.length) throw new Error('Field email must be unique');
+  return (scan.Items[0]?.attrs as UserInterface) || null;
+}
+
+async function validateRegister(eventBody: Omit<UserInterface, 'userId'>) {
+  const existingUser = getUserByEmail(eventBody.email);
+  if (existingUser) throw new Error('Field email must be unique');
 
   return {
     ...eventBody,
