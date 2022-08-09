@@ -23,7 +23,7 @@ plugins:
 
 functions:
   getUser:
-    handler: src/users/handlers.getUser
+    handler: src/lambda/users/handlers.getUser
     name: getUser
     memorySize: 1024
     timeout: 20
@@ -37,7 +37,7 @@ functions:
           - 'dynamodb:GetItem'
         Resource: !GetAtt UsersTable.Arn
   createUser:
-    handler: src/users/handlers.createUser
+    handler: src/lambda/users/handlers.createUser
     name: createUser
     memorySize: 128
     timeout: 5
@@ -51,7 +51,7 @@ functions:
           - 'dynamodb:PutItem'
         Resource: !GetAtt UsersTable.Arn
   getCount:
-    handler: src/visits/handlers.getCount
+    handler: src/lambda/visits/handlers.getCount
     name: getCount
     memorySize: 128
     timeout: 10
@@ -60,7 +60,7 @@ functions:
           path: visits
           method: GET
   hitCount:
-    handler: src/visits/handlers.hitCount
+    handler: src/lambda/visits/handlers.hitCount
     name: hitCount
     memorySize: 128
     timeout: 10
