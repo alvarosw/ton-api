@@ -29,7 +29,7 @@ function generatePolicy({
 }
 
 export function auth(event: APIGatewayRequestAuthorizerEvent, _context, callback) {
-  const token = event.headers.authorizationToken;
+  const token = event['authorizationToken'];
   if (!token) return callback(null, 'Unauthorized');
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
