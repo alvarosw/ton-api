@@ -4,7 +4,8 @@ import User from './user';
 
 export async function getUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    const user = await User.get(event.pathParameters.userId);
+    const { attrs: user } = await User.get(event.pathParameters.userId);
+    delete user.password;
 
     return response(200, user);
   } catch (e) {
