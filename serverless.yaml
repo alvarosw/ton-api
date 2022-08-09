@@ -20,8 +20,15 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
+  - serverless-offline
 
 functions:
+  # middleware
+  verifyToken:
+    name: verifyToken
+    handler: src/lambda/auth/middleware.auth
+
+  # users
   getUser:
     handler: src/lambda/users/handlers.getUser
     name: getUser
@@ -31,25 +38,44 @@ functions:
       - http:
           path: users/{userId}
           method: GET
+          authorizer: verifyToken
     iamRoleStatements:
       - Effect: 'Allow'
         Action:
           - 'dynamodb:GetItem'
         Resource: !GetAtt UsersTable.Arn
-  createUser:
-    handler: src/lambda/users/handlers.createUser
-    name: createUser
-    memorySize: 128
-    timeout: 5
+
+  # auth
+  register:
+    handler: src/lambda/auth/handlers.register
+    name: register
+    memorySize: 256
+    timeout: 10
     events:
       - http:
-          path: users
+          path: auth/register
           method: POST
     iamRoleStatements:
       - Effect: 'Allow'
         Action:
           - 'dynamodb:PutItem'
         Resource: !GetAtt UsersTable.Arn
+  login:
+    handler: src/lambda/auth/handlers.login
+    name: login
+    memorySize: 256
+    timeout: 10
+    events:
+      - http:
+          path: auth/login
+          method: POST
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action:
+          - 'dynamodb:GetItem'
+        Resource: !GetAtt UsersTable.Arn
+
+  # visits
   getCount:
     handler: src/lambda/visits/handlers.getCount
     name: getCount
