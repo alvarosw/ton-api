@@ -1,5 +1,5 @@
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { badResponse, response } from '../../utils';
+import { badResponse, response } from '../../helpers';
 import { GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import db from '../../db';
