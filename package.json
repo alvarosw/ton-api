@@ -35,6 +35,7 @@
     "jest": "^27.5.0",
     "prettier": "^2.5.1",
     "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-offline": "^9.1.7",
     "serverless-plugin-typescript": "^2.1.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5"

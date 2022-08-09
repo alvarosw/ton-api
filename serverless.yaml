@@ -20,8 +20,14 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
+  - serverless-offline
 
 functions:
+  # middleware
+  verifyToken:
+    name: verifyToken
+    handler: src/lambda/auth/middleware.auth
+
   # users
   getUser:
     handler: src/lambda/users/handlers.getUser
@@ -32,6 +38,8 @@ functions:
       - http:
           path: users/{userId}
           method: GET
+          cors: true
+          authorizer: verifyToken
     iamRoleStatements:
       - Effect: 'Allow'
         Action:
