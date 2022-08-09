@@ -11,6 +11,14 @@ type UserInterface = {
   password: string;
 };
 
+const TOKEN_EXPIRATION_TIME_IN_HOURS = process.env.TOKEN_EXPIRATION_TIME_IN_HOURS || 24;
+
+export async function login(event: APIGatewayEvent) {
+  return tryLogin(JSON.parse(event.body))
+    .then((token) => response(200, token))
+    .catch((error) => badResponse(401, error.message));
+}
+
 export async function register(event: APIGatewayEvent) {
   try {
     const input = await validateRegister(JSON.parse(event.body));
@@ -31,6 +39,34 @@ async function getUserByEmail(email: string) {
   const [scan] = await User.scan().where('email').equals(email).exec().promise();
 
   return (scan.Items[0]?.attrs as UserInterface) || null;
+}
+
+async function tryLogin(credentials: { email: string; password: string }) {
+  const user = await getUserByEmail(credentials.email);
+  if (!user) throw new Error('Invalid email');
+
+  const token = await comparePassword({
+    inputPassword: credentials.password,
+    userPassword: user.password,
+    userId: user.userId,
+  });
+
+  return { token };
+}
+
+async function comparePassword({ inputPassword, userPassword, userId }: Record<string, string>) {
+  const passwordMatches = await bcrypt.compare(inputPassword, userPassword);
+  if (!passwordMatches) throw new Error('Invalid password');
+
+  return signToken(userId);
+}
+
+function signToken(userId: string) {
+  const tokenExpirationTimeInSeconds = Number(TOKEN_EXPIRATION_TIME_IN_HOURS) * 3600;
+
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: tokenExpirationTimeInSeconds,
+  });
 }
 
 async function validateRegister(eventBody: Omit<UserInterface, 'userId'>) {

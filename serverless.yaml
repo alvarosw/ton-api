@@ -53,6 +53,20 @@ functions:
         Action:
           - 'dynamodb:PutItem'
         Resource: !GetAtt UsersTable.Arn
+  login:
+    handler: src/lambda/auth/handlers.login
+    name: login
+    memorySize: 256
+    timeout: 10
+    events:
+      - http:
+          path: auth/login
+          method: POST
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action:
+          - 'dynamodb:GetItem'
+        Resource: !GetAtt UsersTable.Arn
 
   # visits
   getCount:
