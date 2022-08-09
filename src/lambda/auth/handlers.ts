@@ -70,7 +70,7 @@ function signToken(userId: string) {
 }
 
 async function validateRegister(eventBody: Omit<UserInterface, 'userId'>) {
-  const existingUser = getUserByEmail(eventBody.email);
+  const existingUser = await getUserByEmail(eventBody.email);
   if (existingUser) throw new Error('Field email must be unique');
 
   return {
