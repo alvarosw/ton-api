@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../users/User';
 import { APIGatewayEvent } from 'aws-lambda';
-import { badResponse, response } from '../../utils';
+import { badResponse, response } from '../../helpers';
 
 type UserInterface = {
   userId: string;
