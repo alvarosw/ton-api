@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../users/User';
 import { APIGatewayEvent } from 'aws-lambda';
