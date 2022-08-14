@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import dynamodb from 'dynamodb';
 import Joi from 'joi';
 
-type UserProps = {
+type UserObject = {
   userId: string;
   name: string;
   email: string;
@@ -20,10 +20,14 @@ const ModelDef = dynamodb.define('User', {
   },
 });
 
-export default class User extends ModelDef<UserProps> {
-  static async getByEmail(email: string) {
+export default class User extends ModelDef<UserObject> {
+  static async getByEmail(email: string): Promise<UserObject | null> {
     const [scan] = await User.scan().where('email').equals(email).exec().promise();
 
-    return (scan.Items[0]?.attrs as UserProps) || null;
+    return (scan.Items[0]?.attrs as UserObject) || null;
+  }
+
+  static async getById(id: string): Promise<UserObject | null> {
+    return (await this.get(id))?.attrs || null;
   }
 }
