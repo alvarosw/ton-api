@@ -58,6 +58,7 @@ functions:
     iamRoleStatements:
       - Effect: 'Allow'
         Action:
+          - 'dynamodb:Scan'
           - 'dynamodb:PutItem'
         Resource: !GetAtt UsersTable.Arn
   login:
@@ -72,7 +73,7 @@ functions:
     iamRoleStatements:
       - Effect: 'Allow'
         Action:
-          - 'dynamodb:GetItem'
+          - 'dynamodb:Scan'
         Resource: !GetAtt UsersTable.Arn
 
   # visits
