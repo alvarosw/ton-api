@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../users/User';
+import User from '../users/user';
 import { APIGatewayEvent } from 'aws-lambda';
 import { badResponse, response } from '../../helpers';
 
