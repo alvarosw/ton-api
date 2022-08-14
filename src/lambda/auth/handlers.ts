@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../users/user';
+import User from '../../models/user';
 import { APIGatewayEvent } from 'aws-lambda';
 import { badResponse, response } from '../../helpers';
 
@@ -35,14 +35,8 @@ export async function register(event: APIGatewayEvent) {
 /**
  * Helpers
  */
-async function getUserByEmail(email: string) {
-  const [scan] = await User.scan().where('email').equals(email).exec().promise();
-
-  return (scan.Items[0]?.attrs as UserInterface) || null;
-}
-
 async function tryLogin(credentials: { email: string; password: string }) {
-  const user = await getUserByEmail(credentials.email);
+  const user = await User.getByEmail(credentials.email);
   if (!user) throw new Error('Invalid email');
 
   const token = await comparePassword({
@@ -70,7 +64,7 @@ function signToken(userId: string) {
 }
 
 async function validateRegister(eventBody: Omit<UserInterface, 'userId'>) {
-  const existingUser = await getUserByEmail(eventBody.email);
+  const existingUser = await User.getByEmail(eventBody.email);
   if (existingUser) throw new Error('Field email must be unique');
 
   return {

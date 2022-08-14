@@ -1,6 +1,6 @@
 import { badResponse, response } from '../../helpers';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import User from './user';
+import User from '../../models/user';
 
 export async function getUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
