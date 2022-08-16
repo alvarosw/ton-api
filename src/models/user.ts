@@ -9,14 +9,21 @@ type UserObject = {
   password: string;
 };
 
+const requiredMsg = (fieldName: string) => ({ 'any.required': `Field ${fieldName} is required` });
 const ModelDef = dynamodb.define('User', {
   hashKey: 'userId',
   tableName: process.env.USERS_TABLE,
   schema: {
-    userId: Joi.string().default(randomUUID()),
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    userId: Joi.not().default(randomUUID()),
+    name: Joi.string().required().messages(requiredMsg('name')),
+    email: Joi.string()
+      .email()
+      .required()
+      .messages({
+        ...requiredMsg('email'),
+        'string.email': 'Field email should be a valid email',
+      }),
+    password: Joi.string().required().messages(requiredMsg('password')),
   },
 });
 
