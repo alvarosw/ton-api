@@ -87,7 +87,7 @@ functions:
           path: visits
           method: GET
   hitCount:
-    handler: src/lambda/visits/handlers.hitCount
+    handler: src/lambda/visits/visits.handlers.hitCount
     name: hitCount
     memorySize: 128
     timeout: 10
