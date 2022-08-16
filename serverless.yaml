@@ -26,14 +26,14 @@ functions:
   # middleware
   verifyToken:
     name: verifyToken
-    handler: src/lambda/auth/middleware.auth
+    handler: src/middleware/auth.authenticate
 
   # users
   getUser:
-    handler: src/lambda/users/handlers.getUser
+    handler: src/lambda/users/users.handlers.getUser
     name: getUser
-    memorySize: 1024
-    timeout: 20
+    memorySize: 256
+    timeout: 10
     events:
       - http:
           path: users/{userId}
@@ -47,7 +47,7 @@ functions:
 
   # auth
   register:
-    handler: src/lambda/auth/handlers.register
+    handler: src/lambda/auth/auth.handlers.register
     name: register
     memorySize: 256
     timeout: 10
@@ -62,7 +62,7 @@ functions:
           - 'dynamodb:PutItem'
         Resource: !GetAtt UsersTable.Arn
   login:
-    handler: src/lambda/auth/handlers.login
+    handler: src/lambda/auth/auth.handlers.login
     name: login
     memorySize: 256
     timeout: 10
@@ -78,7 +78,7 @@ functions:
 
   # visits
   getCount:
-    handler: src/lambda/visits/handlers.getCount
+    handler: src/lambda/visits/visits.handlers.getCount
     name: getCount
     memorySize: 128
     timeout: 10

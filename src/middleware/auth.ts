@@ -28,7 +28,7 @@ function generatePolicy({
   };
 }
 
-export function auth(event: APIGatewayRequestAuthorizerEvent, _context, callback) {
+export function authenticate(event: APIGatewayRequestAuthorizerEvent, _context, callback) {
   const token = event['authorizationToken'];
   if (!token) return callback(null, 'Unauthorized');
 
