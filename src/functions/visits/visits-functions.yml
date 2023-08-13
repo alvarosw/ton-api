@@ -1,0 +1,18 @@
+get-visits-count:
+  description: Function to handle GET /visits endpoint.
+  handler: ./build/src/lambda/visits/visits.handlers.getCount
+  memorySize: 128
+  timeout: 10
+  events:
+    - http:
+        path: visits
+        method: GET
+hit-visits-count:
+  description: Function to handle POST /visits endpoint.
+  handler: ./build/src/lambda/visits/visits.handlers.hitCount
+  memorySize: 128
+  timeout: 10
+  events:
+    - http:
+        path: visits
+        method: POST

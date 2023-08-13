@@ -1,4 +1,2 @@
-export { request } from './request';
-export { response } from './response';
-export { badResponse } from './badResponse';
+export { Response } from './response';
 export { Exception } from './exception';

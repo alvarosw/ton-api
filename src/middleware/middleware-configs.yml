@@ -1,0 +1,3 @@
+verify-token:
+  description: Middleware function.
+  handler: ./build/src/middleware/auth.authenticate

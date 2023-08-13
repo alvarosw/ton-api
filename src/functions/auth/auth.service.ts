@@ -18,7 +18,7 @@ export default class AuthService {
 
     await this.comparePassword(credentials.password, user.password);
 
-    return this.signToken(user.userId);
+    return this.signToken(user.id);
   }
 
   async register(data: UserFields) {

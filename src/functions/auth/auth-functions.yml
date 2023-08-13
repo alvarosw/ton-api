@@ -1,0 +1,30 @@
+register:
+  description: Function to handle POST /auth/register endpoint.
+  handler: ./build/src/lambda/auth/auth.handlers.register
+  memorySize: 256
+  timeout: 10
+  events:
+    - http:
+        path: auth/register
+        method: POST
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:Scan'
+        - 'dynamodb:PutItem'
+      Resource: !GetAtt UsersTable.Arn
+
+login:
+  description: Function to handle POST /auth/login endpoint.
+  handler: ./build/src/lambda/auth/auth.handlers.login
+  memorySize: 256
+  timeout: 10
+  events:
+    - http:
+        path: auth/login
+        method: POST
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:Scan'
+      Resource: !GetAtt UsersTable.Arn
