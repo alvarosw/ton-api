@@ -1,0 +1,19 @@
+get-user:
+  description: Function to handle GET /users/{id} endpoint.
+  handler: ./build/src/functions/users/get-user.handle
+  memorySize: 256
+  timeout: 10
+  events:
+    - http:
+        path: users/{id}
+        method: GET
+        authorizer: verify-token
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:GetItem'
+      Resource: !GetAtt UsersTable.Arn
+  package:
+    patterns:
+      - ./build/src/functions/users/get-user.js
+      - ./build/src/controllers/users.js

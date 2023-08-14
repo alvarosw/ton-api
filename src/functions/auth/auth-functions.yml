@@ -1,0 +1,38 @@
+register:
+  description: Function to handle POST /auth/register endpoint.
+  handler: ./build/src/functions/auth/register.handle
+  memorySize: 256
+  timeout: 10
+  events:
+    - http:
+        path: auth/register
+        method: POST
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:Scan'
+        - 'dynamodb:PutItem'
+      Resource: !GetAtt UsersTable.Arn
+  package:
+    patterns:
+      - ./build/src/functions/auth/register.js
+      - ./build/src/controllers/auth-config.js
+
+login:
+  description: Function to handle POST /auth/login endpoint.
+  handler: ./build/src/functions/auth/login.handle
+  memorySize: 256
+  timeout: 10
+  events:
+    - http:
+        path: auth/login
+        method: POST
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:Scan'
+      Resource: !GetAtt UsersTable.Arn
+  package:
+    patterns:
+      - ./build/src/functions/auth/login.js
+      - ./build/src/controllers/auth-config.js

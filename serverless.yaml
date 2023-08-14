@@ -1,100 +1,45 @@
 service: ton-api
-
 useDotenv: true
 
 provider:
   name: aws
   runtime: nodejs16.x
   stage: dev
+  tags: 
+    name: ton-api
+    stage: dev
   region: us-east-1
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
-    COUNTER_API_URL: ${env:COUNTER_API_URL}
-    COUNTER_NAMESPACE: ${env:COUNTER_NAMESPACE}
-    COUNTER_KEY: ${env:COUNTER_KEY}
+    COUNTER_API_URL: ${env:COUNTER_API_URL, 'https://api.countapi.xyz'}
+    COUNTER_NAMESPACE: ${env:COUNTER_NAMESPACE, 'ton-site.com'}
+    COUNTER_KEY: ${env:COUNTER_KEY, 'visits'}
+    JWT_SECRET: ${env:JWT_SECRET, 'supersecret'}
+    TOKEN_EXPIRATION_HOURS: ${env:TOKEN_EXPIRATION_HOURS, '24'}
+
+package:
+  individually: true
+  exclude:
+    - "*/**"
+  patterns:
+    - "./build/src/utils/*.js"
 
 custom:
-  usersTableName: users-table-${self:provider.stage}
+  usersTableName: ton-users-table-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
-  - serverless-plugin-typescript
   - serverless-dotenv-plugin
   - serverless-offline
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
 
 functions:
-  # middleware
-  verifyToken:
-    name: verifyToken
-    handler: src/middleware/auth.authenticate
+  - ${file(./src/middleware/middleware-configs.yml)}
+  - ${file(./src/functions/auth/auth-functions.yml)}
+  - ${file(./src/functions/users/users-functions.yml)}
+  - ${file(./src/functions/visits/visits-functions.yml)}
 
-  # users
-  getUser:
-    handler: src/lambda/users/users.handlers.getUser
-    name: getUser
-    memorySize: 256
-    timeout: 10
-    events:
-      - http:
-          path: users/{userId}
-          method: GET
-          authorizer: verifyToken
-    iamRoleStatements:
-      - Effect: 'Allow'
-        Action:
-          - 'dynamodb:GetItem'
-        Resource: !GetAtt UsersTable.Arn
-
-  # auth
-  register:
-    handler: src/lambda/auth/auth.handlers.register
-    name: register
-    memorySize: 256
-    timeout: 10
-    events:
-      - http:
-          path: auth/register
-          method: POST
-    iamRoleStatements:
-      - Effect: 'Allow'
-        Action:
-          - 'dynamodb:Scan'
-          - 'dynamodb:PutItem'
-        Resource: !GetAtt UsersTable.Arn
-  login:
-    handler: src/lambda/auth/auth.handlers.login
-    name: login
-    memorySize: 256
-    timeout: 10
-    events:
-      - http:
-          path: auth/login
-          method: POST
-    iamRoleStatements:
-      - Effect: 'Allow'
-        Action:
-          - 'dynamodb:Scan'
-        Resource: !GetAtt UsersTable.Arn
-
-  # visits
-  getCount:
-    handler: src/lambda/visits/visits.handlers.getCount
-    name: getCount
-    memorySize: 128
-    timeout: 10
-    events:
-      - http:
-          path: visits
-          method: GET
-  hitCount:
-    handler: src/lambda/visits/visits.handlers.hitCount
-    name: hitCount
-    memorySize: 128
-    timeout: 10
-    events:
-      - http:
-          path: visits
-          method: POST
 resources:
   Resources:
     UsersTable:
@@ -102,10 +47,10 @@ resources:
       Properties:
         TableName: ${self:custom.usersTableName}
         AttributeDefinitions:
-          - AttributeName: userId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
