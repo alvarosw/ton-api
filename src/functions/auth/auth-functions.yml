@@ -7,6 +7,7 @@ register:
     - http:
         path: auth/register
         method: POST
+        bodyType: PostUser
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -27,6 +28,7 @@ login:
     - http:
         path: auth/login
         method: POST
+        bodyType: UserCredentials
   iamRoleStatements:
     - Effect: 'Allow'
       Action:

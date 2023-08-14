@@ -8,6 +8,14 @@ get-user:
         path: users/{id}
         method: GET
         authorizer: verify-token
+        responses:
+          200:
+            description: Successful API response
+            bodyType: User
+          404:
+            description: Not Found
+          500:
+            description: Internal Server Error
   iamRoleStatements:
     - Effect: 'Allow'
       Action:

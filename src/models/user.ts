@@ -1,13 +1,7 @@
 import Joi from 'joi';
 import { randomUUID } from 'crypto';
 import dynamodb, { Model } from 'dynamodb';
-
-export interface User {
-  id: string
-  name: string
-  email: string
-  password: string
-};
+import { User } from 'src/types/user';
 
 const requiredMsg = (fieldName: string) => ({ 'any.required': `Field ${fieldName} is required` });
 const ModelDef: Model<User> = dynamodb.define('User', {

@@ -1,13 +1,13 @@
-import UserRepository, { User } from '../models/user';
+import UserRepository from '../models/user';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Exception } from '../utils';
+import { PostUser, UserCredentials } from 'src/types/user';
 
-type UserInput = Omit<User, 'id'>
 const TOKEN_EXPIRATION_HOURS = process.env.TOKEN_EXPIRATION_HOURS || 24;
 
 export default class AuthController {
-  async login(credentials: Omit<UserInput, 'name'>) {
+  async login(credentials: UserCredentials) {
     const user = await UserRepository.getByEmail(credentials.email);
     if (!user) throw new Exception({ message: 'Invalid email', statusCode: 401 });
 
@@ -16,7 +16,7 @@ export default class AuthController {
     return this.signToken(user.id);
   }
 
-  async register(data: UserInput) {
+  async register(data: PostUser) {
     try {
       const input = await this.validateRegister(data);
       const { attrs: user } = await UserRepository.create(input);
@@ -44,7 +44,7 @@ export default class AuthController {
     return true;
   }
 
-  private async validateRegister(eventBody: UserInput) {
+  private async validateRegister(eventBody: PostUser) {
     const existingUser = await UserRepository.getByEmail(eventBody.email);
     if (existingUser) throw new Error('Field email must be unique');
 
