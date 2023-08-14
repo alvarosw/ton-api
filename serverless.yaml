@@ -15,6 +15,14 @@ provider:
     COUNTER_NAMESPACE: ${env:COUNTER_NAMESPACE, 'ton-site.com'}
     COUNTER_KEY: ${env:COUNTER_KEY, 'visits'}
     JWT_SECRET: ${env:JWT_SECRET, 'supersecret'}
+    TOKEN_EXPIRATION_HOURS: ${env:TOKEN_EXPIRATION_HOURS, '24'}
+
+package:
+  individually: true
+  exclude:
+    - "*/**"
+  patterns:
+    - "./build/src/utils/*.js"
 
 custom:
   usersTableName: ton-users-table-${self:provider.stage}
@@ -23,6 +31,8 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-dotenv-plugin
   - serverless-offline
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
 
 functions:
   - ${file(./src/middleware/middleware-configs.yml)}

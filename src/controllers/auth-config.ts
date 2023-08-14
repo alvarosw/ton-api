@@ -1,19 +1,14 @@
-import User from '../../models/user';
+import UserRepository, { User } from '../models/user';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { Exception } from '../../helpers';
+import { Exception } from '../utils';
 
-type UserFields = {
-  name: string;
-  email: string;
-  password: string;
-};
+type UserInput = Omit<User, 'id'>
+const TOKEN_EXPIRATION_HOURS = process.env.TOKEN_EXPIRATION_HOURS || 24;
 
-const TOKEN_EXPIRATION_TIME_IN_HOURS = process.env.TOKEN_EXPIRATION_TIME_IN_HOURS || 24;
-
-export default class AuthService {
-  async login(credentials: Omit<UserFields, 'name'>) {
-    const user = await User.getByEmail(credentials.email);
+export default class AuthController {
+  async login(credentials: Omit<UserInput, 'name'>) {
+    const user = await UserRepository.getByEmail(credentials.email);
     if (!user) throw new Exception({ message: 'Invalid email', statusCode: 401 });
 
     await this.comparePassword(credentials.password, user.password);
@@ -21,10 +16,10 @@ export default class AuthService {
     return this.signToken(user.id);
   }
 
-  async register(data: UserFields) {
+  async register(data: UserInput) {
     try {
       const input = await this.validateRegister(data);
-      const { attrs: user } = await User.create(input);
+      const { attrs: user } = await UserRepository.create(input);
 
       delete user.password;
       return user;
@@ -49,8 +44,8 @@ export default class AuthService {
     return true;
   }
 
-  private async validateRegister(eventBody: UserFields) {
-    const existingUser = await User.getByEmail(eventBody.email);
+  private async validateRegister(eventBody: UserInput) {
+    const existingUser = await UserRepository.getByEmail(eventBody.email);
     if (existingUser) throw new Error('Field email must be unique');
 
     return {
@@ -60,7 +55,7 @@ export default class AuthService {
   }
 
   private signToken(userId: string) {
-    const expiresIn = Number(TOKEN_EXPIRATION_TIME_IN_HOURS) * 3600;
+    const expiresIn = Number(TOKEN_EXPIRATION_HOURS) * 3600;
 
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
       expiresIn,

@@ -1,12 +1,11 @@
-
-get-users:
-  description: Function to handle GET /users endpoint.
-  handler: ./build/src/lambda/users/users.handlers.getUser
+get-user:
+  description: Function to handle GET /users/{id} endpoint.
+  handler: ./build/src/functions/users/get-user.handle
   memorySize: 256
   timeout: 10
   events:
     - http:
-        path: users/{userId}
+        path: users/{id}
         method: GET
         authorizer: verify-token
   iamRoleStatements:
@@ -14,3 +13,7 @@ get-users:
       Action:
         - 'dynamodb:GetItem'
       Resource: !GetAtt UsersTable.Arn
+  package:
+    patterns:
+      - ./build/src/functions/users/get-user.js
+      - ./build/src/controllers/users.js

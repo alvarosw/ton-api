@@ -37,6 +37,8 @@
     "serverless-dotenv-plugin": "^4.0.2",
     "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-offline": "^9.1.7",
+    "serverless-plugin-common-excludes": "^4.0.0",
+    "serverless-plugin-include-dependencies": "^5.1.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5"
   }
