@@ -25,9 +25,18 @@ package:
     - "./build/src/utils/*.js"
 
 custom:
+  autoswagger:
+    title: Ton API
+    useStage: true
+    basePath: /dev # make it change automatically
+    typefiles:
+      - "./src/types/user.d.ts"
+    apiKeyHeaders: ['authorizationToken']
+    
   usersTableName: ton-users-table-${self:provider.stage}
 
 plugins:
+  - serverless-auto-swagger
   - serverless-iam-roles-per-function
   - serverless-dotenv-plugin
   - serverless-offline
