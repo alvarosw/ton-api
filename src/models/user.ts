@@ -1,20 +1,20 @@
-import { randomUUID } from 'crypto';
-import dynamodb from 'dynamodb';
 import Joi from 'joi';
+import { randomUUID } from 'crypto';
+import dynamodb, { Model } from 'dynamodb';
 
-type UserObject = {
-  userId: string;
-  name: string;
-  email: string;
-  password: string;
+export interface User {
+  id: string
+  name: string
+  email: string
+  password: string
 };
 
 const requiredMsg = (fieldName: string) => ({ 'any.required': `Field ${fieldName} is required` });
-const ModelDef = dynamodb.define('User', {
-  hashKey: 'userId',
+const ModelDef: Model<User> = dynamodb.define('User', {
+  hashKey: 'id',
   tableName: process.env.USERS_TABLE,
   schema: {
-    userId: Joi.not().default(randomUUID()),
+    id: Joi.string().default(randomUUID()),
     name: Joi.string().required().messages(requiredMsg('name')),
     email: Joi.string()
       .email()
@@ -27,14 +27,19 @@ const ModelDef = dynamodb.define('User', {
   },
 });
 
-export default class User extends ModelDef<UserObject> {
-  static async getByEmail(email: string): Promise<UserObject | null> {
-    const [scan] = await User.scan().where('email').equals(email).exec().promise();
+export default class UserRepository extends ModelDef {
+  static async getByEmail(email: string): Promise<User | null> {
+    const [scan] = await UserRepository
+      .scan()
+      .where('email')
+      .equals(email)
+      .exec()
+      .promise();
 
-    return (scan.Items[0]?.attrs as UserObject) || null;
+    return (scan.Items[0]?.attrs as User) || null;
   }
 
-  static async getById(id: string): Promise<UserObject | null> {
+  static async getById(id: string): Promise<User | null> {
     return (await this.get(id))?.attrs || null;
   }
 }
