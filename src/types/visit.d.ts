@@ -1,0 +1,3 @@
+interface VisitsCount {
+  value: number
+}

@@ -7,7 +7,20 @@ register:
     - http:
         path: auth/register
         method: POST
+        # docs
+        summary: Register
+        description: Route to register a new user
         bodyType: PostUser
+        responseData:
+          201:
+            bodyType: PostUser
+            description: Created
+          409:
+            bodyType: HttpError
+            description: Conflict
+          500:
+            bodyType: HttpError
+            description: Internal Server Error
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -29,7 +42,20 @@ login:
     - http:
         path: auth/login
         method: POST
+        # docs
+        summary: Login
+        description: Performs login for an user
         bodyType: UserCredentials
+        responseData:
+          200:
+            bodyType: LoginResponse
+            description: OK
+          401:
+            bodyType: HttpError
+            description: Unauthorized
+          500:
+            bodyType: HttpError
+            description: Internal Server Error
   iamRoleStatements:
     - Effect: 'Allow'
       Action:

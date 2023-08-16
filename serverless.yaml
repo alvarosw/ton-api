@@ -28,6 +28,9 @@ custom:
     title: Ton API
     typefiles:
       - "./src/types/user.d.ts"
+      - "./src/types/auth.d.ts"
+      - "./src/types/visit.d.ts"
+      - "./src/types/error.d.ts"
     apiKeyHeaders:
       - "Authorization"
     apiType: http
