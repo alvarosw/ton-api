@@ -10,7 +10,7 @@ export async function handle() {
     return HttpTools.buildResponse(201, result)
   } catch (error) {
     if (error instanceof Exception)
-      return HttpTools.buildResponse(error.statusCode, error);
+      return HttpTools.buildResponse(error.statusCode, error.message);
     return HttpTools.buildResponse(500, 'Something went wrong. Try again later.');
   }
 }

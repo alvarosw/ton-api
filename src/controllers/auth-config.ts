@@ -24,6 +24,8 @@ export default class AuthController {
       delete user.password;
       return user;
     } catch (error) {
+      if (error instanceof Exception)
+        throw error
       if (error.message.startsWith('Field'))
         throw new Exception({
           message: error.message,
@@ -46,7 +48,11 @@ export default class AuthController {
 
   private async validateRegister(eventBody: PostUser) {
     const existingUser = await UserRepository.getByEmail(eventBody.email);
-    if (existingUser) throw new Error('Field email must be unique');
+    if (existingUser)
+      throw new Exception({
+        message: 'The email provided is already in use!',
+        statusCode: 400
+      });
 
     return {
       ...eventBody,
