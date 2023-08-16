@@ -1,3 +1,3 @@
-export interface HttpError {
-  message: string
-}
+export type HttpError = {
+  message: string;
+};

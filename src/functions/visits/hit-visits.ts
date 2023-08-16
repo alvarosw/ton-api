@@ -5,9 +5,9 @@ const controller = new VisitController();
 
 export async function handle() {
   try {
-    await controller.hitVisitsCount()
+    await controller.hitVisitsCount();
 
-    return HttpTools.buildResponse(201)
+    return HttpTools.buildResponse(201);
   } catch (error) {
     if (error instanceof Exception)
       return HttpTools.buildResponse(error.statusCode, error.message);
