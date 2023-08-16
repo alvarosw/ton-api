@@ -4,10 +4,10 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs16.x
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   tags: 
     name: ton-api
-    stage: dev
+    stage: ${opt:stage, 'dev'}
   region: us-east-1
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
@@ -19,20 +19,27 @@ provider:
 
 package:
   individually: true
-  exclude:
-    - "*/**"
   patterns:
     - "./build/src/utils/*.js"
 
 custom:
+  # swagger
   autoswagger:
     title: Ton API
-    useStage: true
-    basePath: /dev # make it change automatically
     typefiles:
       - "./src/types/user.d.ts"
-    apiKeyHeaders: ['authorizationToken']
-    
+    apiKeyHeaders:
+      - "Authorization"
+    apiType: http
+    host: ${self:custom.swaggerHost.${self:provider.stage}}
+    useStage: false
+    excludeStages: 
+      - "prd"
+  swaggerHost:
+    local: localhost:3000/local
+    dev: z0lmzmahfg.execute-api.us-east-1.amazonaws.com/dev
+  
+  # tables
   usersTableName: ton-users-table-${self:provider.stage}
 
 plugins:

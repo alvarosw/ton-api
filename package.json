@@ -2,21 +2,22 @@
   "name": "ton-api",
   "version": "1.0.0",
   "description": "",
+  "scripts": {
+    "unit": "jest",
+    "lint": "eslint '*.ts' --quiet --fix",
+    "build": "npx tsc",
+    "serve": "serverless offline start --printOutput --stage local",
+    "test": "npm run compile && npm run unit",
+    "predeploy:dev": "npm run build",
+    "deploy:dev": "serverless deploy --stage dev"
+  },
   "dependencies": {
     "aws-lambda": "^1.0.7",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "dynamodb": "^1.3.0",
-    "joi": "^17.6.0",
+    "joi": "^17.9.2",
     "jsonwebtoken": "^8.5.1"
-  },
-  "scripts": {
-    "unit": "jest",
-    "lint": "eslint '*.ts' --quiet --fix",
-    "build": "npx tsc",
-    "predeploy": "npm run build",
-    "deploy": "serverless deploy",
-    "test": "npm run compile && npm run unit"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.119",
@@ -39,7 +40,7 @@
     "serverless-iam-roles-per-function": "^3.2.0",
     "serverless-offline": "^9.1.7",
     "serverless-plugin-common-excludes": "^4.0.0",
-    "serverless-plugin-include-dependencies": "^5.1.0",
+    "serverless-plugin-include-dependencies": "^4.1.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.5"
   }
