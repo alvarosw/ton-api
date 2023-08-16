@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "unit": "jest",
     "lint": "eslint '*.ts' --quiet --fix",
     "build": "npx tsc",
-    "serve": "serverless offline start --printOutput --stage local",
-    "test": "npm run compile && npm run unit",
+    "start": "npx nodemon --ignore swagger/ --exec serverless offline start --stage local --printOutput",
+    "test": "npm run build && npx jest",
     "predeploy:dev": "npm run build",
     "deploy:dev": "serverless deploy --stage dev"
   },
@@ -34,6 +33,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.5.0",
+    "nodemon": "^3.0.1",
     "prettier": "^2.5.1",
     "serverless-auto-swagger": "^2.12.0",
     "serverless-dotenv-plugin": "^4.0.2",
