@@ -7,6 +7,16 @@ get-visits:
     - http:
         path: visits
         method: GET
+        # docs
+        summary: Get Visits
+        description: Gets current visits counting
+        responseData:
+          200:
+            description: OK
+            bodyType: VisitsCount
+          500:
+            bodyType: HttpError
+            description: Internal Server Error
   package:
     patterns:
       - ./build/src/functions/visits/get-visits.js
@@ -20,6 +30,15 @@ hit-visits:
     - http:
         path: visits
         method: POST
+        # docs
+        summary: Hit Visits
+        description: Adds 1 to the visits counter
+        responseData:
+          201:
+            description: OK
+          500:
+            bodyType: HttpError
+            description: Internal Server Error
   package:
     patterns:
       - ./build/src/functions/visits/get-visits.js
