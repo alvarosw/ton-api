@@ -25,8 +25,7 @@ export default class AuthController {
       delete user.password;
       return user;
     } catch (error) {
-      if (error instanceof Exception)
-        throw error
+      if (error instanceof Exception) throw error;
       if (error.message.startsWith('Field'))
         throw new Exception({
           message: error.message,
@@ -52,7 +51,7 @@ export default class AuthController {
     if (existingUser)
       throw new Exception({
         message: 'The email provided is already in use!',
-        statusCode: 409
+        statusCode: 409,
       });
 
     return {
