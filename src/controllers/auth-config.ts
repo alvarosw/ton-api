@@ -2,7 +2,8 @@ import UserRepository from '../models/user';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Exception } from '../utils';
-import { PostUser, UserCredentials } from 'src/types/user';
+import { PostUser } from 'src/types/user';
+import { UserCredentials } from 'src/types/auth';
 
 const TOKEN_EXPIRATION_HOURS = process.env.TOKEN_EXPIRATION_HOURS || 24;
 
@@ -51,7 +52,7 @@ export default class AuthController {
     if (existingUser)
       throw new Exception({
         message: 'The email provided is already in use!',
-        statusCode: 400
+        statusCode: 409
       });
 
     return {
