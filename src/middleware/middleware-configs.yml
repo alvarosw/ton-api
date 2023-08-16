@@ -1,3 +1,6 @@
 verify-token:
   description: Middleware function.
-  handler: ./build/src/middleware/auth.authenticate
+  handler: ./build/src/middleware/auth.handle
+  package:
+    patterns:
+      - ./build/src/middleware/auth.js
