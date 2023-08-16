@@ -5,7 +5,7 @@ const controller = new VisitController();
 
 export async function handle() {
   try {
-    const count = controller.getVisitsCount()
+    const count = await controller.getVisitsCount()
 
     return HttpTools.buildResponse(200, count)
   } catch (error) {
