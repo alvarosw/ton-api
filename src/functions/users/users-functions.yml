@@ -8,14 +8,6 @@ get-user:
         path: users/{id}
         method: GET
         authorizer: verify-token
-        responses:
-          200:
-            description: Successful API response
-            bodyType: User
-          404:
-            description: Not Found
-          500:
-            description: Internal Server Error
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -25,3 +17,4 @@ get-user:
     patterns:
       - ./build/src/functions/users/get-user.js
       - ./build/src/controllers/users.js
+      - ./build/src/middleware/auth.js

@@ -18,6 +18,7 @@ register:
     patterns:
       - ./build/src/functions/auth/register.js
       - ./build/src/controllers/auth-config.js
+      - ./build/src/models/user.js
 
 login:
   description: Function to handle POST /auth/login endpoint.
@@ -38,3 +39,4 @@ login:
     patterns:
       - ./build/src/functions/auth/login.js
       - ./build/src/controllers/auth-config.js
+      - ./build/src/models/user.js
