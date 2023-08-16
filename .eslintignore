@@ -1,2 +1,4 @@
 node_modules
 .aws-sam
+swagger
+build
