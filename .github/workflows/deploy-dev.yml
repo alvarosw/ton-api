@@ -1,6 +1,4 @@
 name: Deploy develop
-environment:
-  name: develop
 
 on:
   pull_request:
@@ -10,6 +8,7 @@ on:
 jobs:
   deploy:
     name: deploy
+    environment: develop
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
