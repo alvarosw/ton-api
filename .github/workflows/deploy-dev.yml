@@ -1,4 +1,6 @@
 name: Deploy develop
+environment:
+  name: develop
 
 on:
   pull_request:
