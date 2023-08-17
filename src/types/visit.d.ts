@@ -1,3 +1,3 @@
-export interface VisitsCount {
-  value: number
-}
+export type VisitsCount = {
+  value: number;
+};

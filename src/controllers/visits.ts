@@ -5,7 +5,7 @@ const { COUNTER_API_URL, COUNTER_NAMESPACE, COUNTER_KEY } = process.env;
 
 enum CounterOpt {
   Hit = 'hit',
-  Count = 'count'
+  Count = 'count',
 }
 export default class VisitsService {
   async hitVisitsCount() {

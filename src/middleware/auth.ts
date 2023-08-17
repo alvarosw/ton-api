@@ -1,4 +1,4 @@
-import { APIGatewayRequestAuthorizerEvent, Context } from 'aws-lambda';
+import { APIGatewayRequestAuthorizerEvent, Callback, Context } from 'aws-lambda';
 import jwt from 'jsonwebtoken';
 
 function generatePolicy({
@@ -14,27 +14,31 @@ function generatePolicy({
     principalId,
     ...(effect &&
       resource && {
-      policyDocument: {
-        Version: '2012-10-17',
-        Statement: [
-          {
-            Action: 'execute-api:Invoke',
-            Effect: effect,
-            Resource: resource,
-          },
-        ],
-      },
-    }),
+        policyDocument: {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Action: 'execute-api:Invoke',
+              Effect: effect,
+              Resource: resource,
+            },
+          ],
+        },
+      }),
   };
 }
 
-export function handle(event: APIGatewayRequestAuthorizerEvent, _context: Context, callback: Function) {
-  const token = event['authorizationToken'] || '';
+export function handle(
+  event: APIGatewayRequestAuthorizerEvent & { authorizationToken?: string },
+  _context: Context,
+  callback: Callback,
+) {
+  const token = event.authorizationToken || '';
   if (!token) return callback(null, 'Unauthorized');
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      console.info('error on jwt verification', err)
+      console.info('error on jwt verification', err);
       return callback(null, 'Unauthorized');
     }
     return callback(

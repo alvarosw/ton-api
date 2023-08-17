@@ -3,7 +3,9 @@ import { randomUUID } from 'crypto';
 import dynamodb, { Model } from 'dynamodb';
 import { User } from 'src/types/user';
 
-const requiredMsg = (fieldName: string) => ({ 'any.required': `Field ${fieldName} is required` });
+const requiredMsg = (fieldName: string) => ({
+  'any.required': `Field ${fieldName} is required`,
+});
 const ModelDef: Model<User> = dynamodb.define('User', {
   hashKey: 'id',
   tableName: process.env.USERS_TABLE,
@@ -23,8 +25,7 @@ const ModelDef: Model<User> = dynamodb.define('User', {
 
 export default class UserRepository extends ModelDef {
   static async getByEmail(email: string): Promise<User | null> {
-    const [scan] = await UserRepository
-      .scan()
+    const [scan] = await UserRepository.scan()
       .where('email')
       .equals(email)
       .exec()
